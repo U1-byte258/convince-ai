@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Convince AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--grape:#533A71;--violet:#E396F1;--orchid:#DA6ECA;--amethyst:#9449A9;--mvr:#BF2885;--bg:#fcf7fe;--tint:#f6e2fa;--ink:#000;--line:#ead3f0;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{font-family:'Nunito','Quicksand','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);background-color:#fcf7fe}
+button,input,textarea,select{font:inherit}
+.app{display:flex;height:100%}
+.side{width:250px;flex:none;background:#fff;border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:6px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem;color:var(--grape);padding:2px 6px 14px}
+.brand svg{width:34px;height:34px}
+.newbtn{background:var(--amethyst);color:#fff;border:0;border-radius:14px;padding:11px 14px;font-weight:700;cursor:pointer;text-align:left;margin-bottom:10px;transition:background .2s,transform .15s}
+.newbtn:hover{background:var(--grape)}
+.newbtn:active{transform:scale(.97)}
+.nav{background:none;border:0;border-radius:12px;padding:10px 14px;text-align:left;font-weight:600;color:var(--grape);cursor:pointer;transition:background .2s}
+.nav:hover{background:var(--tint)}
+.nav.on{background:var(--tint);color:var(--mvr)}
+:focus-visible{outline:3px solid var(--orchid);outline-offset:2px}
+main{flex:1;min-width:0;position:relative}
+.view{display:none;height:100%;flex-direction:column}
+.view.on{display:flex}
+/* chat */
+.scroll{flex:1;overflow-y:auto;padding:28px 20px 10px}
+.wrap{max-width:720px;margin:0 auto}
+.hero{text-align:center;padding:9vh 0 0}
+.hero svg{width:96px;height:96px;animation:float 4s ease-in-out infinite}
+.hero h1{margin:18px 0 6px;font-size:2.2rem;color:var(--grape);font-weight:800}
+.hero p{margin:0;color:#4a3a5c;font-size:1.05rem}
+@keyframes float{50%{transform:translateY(-8px)}}
+.m{display:flex;gap:10px;margin:14px 0;animation:fade .45s ease both}
+.m.u{justify-content:flex-end}
+.m .b{max-width:82%;padding:11px 16px;border-radius:18px;white-space:pre-wrap;line-height:1.55;overflow-wrap:anywhere}
+.m.u .b{background:var(--amethyst);color:#fff;border-bottom-right-radius:6px}
+.m.a .b{background:#fff;border:1px solid var(--line);border-bottom-left-radius:6px}
+.m svg{width:30px;height:30px;flex:none;margin-top:4px}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.dots{display:inline-flex;gap:5px;padding:5px 0}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--orchid);animation:pulse 1.2s ease-in-out infinite}
+.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,80%,100%{opacity:.25;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
+.bar{padding:10px 20px 20px}
+.box{max-width:720px;margin:0 auto;display:flex;gap:10px;align-items:flex-end;background:#fff;border:2px solid var(--line);border-radius:22px;padding:8px 8px 8px 18px;transition:border-color .2s}
+.box:focus-within{border-color:var(--orchid)}
+.box textarea{flex:1;border:0;outline:0;resize:none;background:none;color:#000;max-height:140px;padding:8px 0;line-height:1.4}
+.box textarea::placeholder{color:#6b5a7a}
+.send{width:42px;height:42px;border-radius:50%;border:0;background:var(--mvr);color:#fff;cursor:pointer;font-size:1.1rem;transition:transform .15s,background .2s}
+.send:hover{background:var(--amethyst)}.send:active{transform:scale(.92)}
+.send:disabled{opacity:.5;cursor:default}
+/* history */
+.page{padding:36px 24px;overflow-y:auto;flex:1}
+.page h2{margin:0 0 6px;font-size:1.7rem;color:var(--grape)}
+.page .sub{margin:0 0 22px;color:#4a3a5c}
+.item{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 18px;margin-bottom:10px;cursor:pointer;transition:border-color .2s,background .2s}
+.item:hover{border-color:var(--orchid);background:var(--tint)}
+.item b{display:block;color:var(--grape)}
+.item span{font-size:.9rem;color:#5b4a6d}
+.empty{background:#fff;border:2px dashed var(--line);border-radius:16px;padding:28px;text-align:center;color:#4a3a5c}
+/* convince: light colors */
+#v-convince{background:linear-gradient(180deg,#f9e9fc,#fdf3ff 60%,#fff)}
+#v-convince .card{background:#fff;border:1px solid var(--violet);border-radius:22px;padding:22px;max-width:720px}
+#v-convince label{display:block;font-weight:700;color:var(--grape);margin:14px 0 6px}
+#v-convince label:first-child{margin-top:0}
+#v-convince input,#v-convince select,#v-convince textarea{width:100%;border:2px solid var(--tint);background:#fffaff;color:#000;border-radius:14px;padding:11px 14px;outline:0;transition:border-color .2s}
+#v-convince input:focus,#v-convince select:focus,#v-convince textarea:focus{border-color:var(--orchid)}
+.go{margin-top:18px;background:var(--violet);color:#000;border:0;border-radius:14px;padding:12px 22px;font-weight:800;cursor:pointer;transition:background .2s,transform .15s}
+.go:hover{background:var(--orchid)}.go:active{transform:scale(.97)}.go:disabled{opacity:.6}
+.out{max-width:720px;margin-top:18px;background:#fff;border:1px solid var(--violet);border-radius:22px;padding:20px 22px;white-space:pre-wrap;line-height:1.6;overflow-wrap:anywhere;animation:fade .4s ease both}
+.out[hidden]{display:none}
+.note{max-width:720px;font-size:.9rem;color:#5b4a6d;margin-top:12px}
+@media(max-width:760px){
+.app{flex-direction:column}
+.side{width:100%;flex-direction:row;flex-wrap:wrap;align-items:center;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line);gap:4px}
+.brand{padding:0 8px 0 2px;font-size:1rem}.brand svg{width:26px;height:26px}
+.newbtn{margin:0 4px 0 auto;order:2;padding:8px 14px}
+.nav{padding:8px 10px;font-size:.92rem}
+.hero h1{font-size:1.7rem}.m .b{max-width:90%}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="pfp" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#000"/><g fill="#ff8228"><ellipse cx="42" cy="14" rx="10" ry="9"/><ellipse cx="33" cy="24" rx="4.5" ry="12"/><ellipse cx="22" cy="30" rx="5" ry="10"/><ellipse cx="32" cy="48" rx="10" ry="13"/><ellipse cx="62" cy="38" rx="9" ry="13"/><ellipse cx="72" cy="26" rx="9" ry="10"/><ellipse cx="78" cy="53" rx="10" ry="17"/><ellipse cx="49" cy="35" rx="5" ry="5"/><ellipse cx="57" cy="59" rx="9" ry="4"/><ellipse cx="46" cy="68" rx="17" ry="6"/><ellipse cx="25" cy="63" rx="6" ry="10"/><ellipse cx="33" cy="75" rx="11" ry="14"/><ellipse cx="58" cy="82" rx="6" ry="11"/><ellipse cx="69" cy="72" rx="7" ry="11"/></g></symbol></defs></svg>
+
+<div class="app">
+  <nav class="side" aria-label="Sections">
+    <div class="brand"><svg><use href="#pfp"/></svg>Convince AI</div>
+    <button class="newbtn opt" id="new">New</button>
+    <button class="nav opt on" data-v="home">Home</button>
+    <button class="nav opt" data-v="history">Chat History</button>
+    <button class="nav opt" data-v="convince">Convince</button>
+  </nav>
+
+  <main>
+    <section class="view on" id="v-home">
+      <div class="scroll"><div class="wrap">
+        <div class="hero" id="hero">
+          <svg><use href="#pfp"/></svg>
+          <h1>Convince AI</h1>
+          <p>Your assistant for gaming and tech. Ask about games, PCs, consoles, settings, or anything in between.</p>
+        </div>
+        <div id="msgs" aria-live="polite"></div>
+      </div></div>
+      <div class="bar"><div class="box">
+        <textarea id="in" rows="1" placeholder="Write a message..." aria-label="Message"></textarea>
+        <button class="send" id="send" aria-label="Send">&#10148;</button>
+      </div></div>
+    </section>
+
+    <section class="view" id="v-history">
+      <div class="page"><div class="wrap" style="margin:0;max-width:720px">
+        <h2>Chat History</h2>
+        <p class="sub">Open a past conversation to keep going.</p>
+        <div id="list"></div>
+      </div></div>
+    </section>
+
+    <section class="view" id="v-convince">
+      <div class="page">
+        <h2>Convince</h2>
+        <p class="sub">Tell me what you want and who you’re asking. I’ll help you make a fair, honest case.</p>
+        <div class="card">
+          <label for="want">What do you want?</label>
+          <input id="want" placeholder="A new game, a PC upgrade, an extra hour of play time...">
+          <label for="who">Who are you asking?</label>
+          <select id="who"><option>My parents</option><option>My guardian</option><option>A grandparent</option><option>My sibling</option><option>My teacher</option><option>Someone else</option></select>
+          <label for="worry">What might they worry about? (optional)</label>
+          <textarea id="worry" rows="2" placeholder="Price, screen time, grades..."></textarea>
+          <button class="go opt" id="go">Build my case</button>
+        </div>
+        <div class="out" id="out" hidden></div>
+        <p class="note">Convince only helps with reasonable, safe requests. It won’t help with things like cigarettes, vaping, alcohol, or anything harmful or illegal.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const AV='<svg><use href="#pfp"/></svg>';
+let chats=[],cur=null,busy=false;
+try{chats=JSON.parse(localStorage.getItem('convince.chats')||'[]')}catch(e){}
+const save=()=>{try{localStorage.setItem('convince.chats',JSON.stringify(chats))}catch(e){}};
+const SYS="You are Convince AI, a friendly assistant that helps gamers with games, gaming hardware, PCs, consoles, and tech. Keep answers clear, upbeat, and fairly short. Never help with harmful or illegal things.";
+const CONVINCE_SYS="You are Convince AI. You help young gamers make an honest, respectful case to a parent, guardian, or other person for a REASONABLE and SAFE request, such as a game, a PC or console upgrade, more play time, or a gaming accessory. If the request involves anything harmful, illegal, or unsafe (cigarettes, vaping, alcohol, drugs, weapons, gambling, adult content, or similar), kindly decline in two sentences and suggest a healthy alternative. Otherwise give: 1) a short opening line they can say, 2) three strong, honest points, 3) a plan that addresses the other person’s worries, 4) a fair compromise they can offer. Be specific, respectful, and never manipulative or deceptive. Keep it under 250 words.";
+
+/* bubble pop on hover */
+let ac=null,lastEl=null;
+function pop(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();
+const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sine';
+o.frequency.setValueAtTime(380,t);o.frequency.exponentialRampToValueAtTime(1100,t+.07);
+g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+.12);
+o.connect(g).connect(ac.destination);o.start(t);o.stop(t+.13)}catch(e){}}
+document.addEventListener('mouseover',e=>{const el=e.target.closest('.opt,.item');if(el&&el!==lastEl)pop();lastEl=el});
+
+/* views */
+function show(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
+document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('on',x.dataset.v===v));
+if(v==='history')renderList();if(v==='home')$('#in').focus()}
+document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>show(b.dataset.v));
+
+/* chat */
+function fresh(){cur={id:Date.now(),title:'New chat',msgs:[]};renderChat()}
+function bubble(role,text){const d=document.createElement('div');d.className='m '+(role==='user'?'u':'a');
+if(role!=='user')d.innerHTML=AV;const b=document.createElement('div');b.className='b';b.textContent=text||'';d.appendChild(b);
+$('#msgs').appendChild(d);const s=document.querySelector('#v-home .scroll');s.scrollTop=s.scrollHeight;return b}
+function renderChat(){$('#msgs').innerHTML='';$('#hero').style.display=cur.msgs.length?'none':'';cur.msgs.forEach(m=>bubble(m.r,m.t))}
+$('#new').onclick=()=>{fresh();show('home')};
+
+const CREATOR=/who\s+(is|are|was)\s+(your|ur)\s+(creator|maker|developer|owner|founder)|who\s+(made|created|built|developed|designed)\s+(you|u)|(your|ur)\s+creator/i;
+
+async function send(){
+  const input=$('#in'),text=input.value.trim();if(!text||busy)return;
+  input.value='';input.style.height='auto';
+  if(!chats.includes(cur)){cur.title=text.slice(0,48);chats.unshift(cur)}
+  cur.msgs.push({r:'user',t:text});$('#hero').style.display='none';bubble('user',text);save();
+  const b=bubble('assistant','');
+  if(CREATOR.test(text)){const a='U1 or Yuvan';b.textContent=a;cur.msgs.push({r:'assistant',t:a});save();return}
+  busy=true;$('#send').disabled=true;b.innerHTML='<span class="dots"><i></i><i></i><i></i></span>';
+  try{
+    const sample=await claude.use('sample');if(!sample)throw {code:'none'};
+    let h=cur.msgs.slice(-12).map(m=>({role:m.r==='user'?'user':'assistant',content:m.t}));
+    while(h.length&&h[0].role!=='user')h.shift();
+    h[0]={role:'user',content:SYS+'\n\nConversation:\n'+h[0].content};
+    const r=await sample(h,{cache:false,onText:({text})=>{b.textContent=text}});
+    b.textContent=r.text;cur.msgs.push({r:'assistant',t:r.text});save();
+  }catch(e){
+    b.textContent=e&&e.code==='not_granted'?'Access was declined. Reload the page and allow it when asked.':'Convince AI couldn’t reply. Check your connection and send your message again.';
+    if(cur.msgs.length&&cur.msgs[cur.msgs.length-1].r==='user')cur.msgs.pop(),save();
+  }
+  busy=false;$('#send').disabled=false;
+  const s=document.querySelector('#v-home .scroll');s.scrollTop=s.scrollHeight;
+}
+$('#send').onclick=send;
+$('#in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
+$('#in').addEventListener('input',e=>{e.target.style.height='auto';e.target.style.height=Math.min(e.target.scrollHeight,140)+'px'});
+
+/* history */
+function renderList(){const l=$('#list');l.innerHTML='';
+if(!chats.length){l.innerHTML='<div class="empty">No chats yet. Start one from Home.</div>';return}
+chats.forEach(c=>{const b=document.createElement('button');b.className='item';
+const t=document.createElement('b');t.textContent=c.title;const s=document.createElement('span');
+s.textContent=c.msgs.length+' messages · '+new Date(c.id).toLocaleDateString();
+b.append(t,s);b.onclick=()=>{cur=c;renderChat();show('home')};l.appendChild(b)})}
+
+/* convince */
+$('#go').onclick=async()=>{
+  const want=$('#want').value.trim(),out=$('#out');
+  if(!want){$('#want').focus();return}
+  const btn=$('#go');btn.disabled=true;out.hidden=false;out.innerHTML='<span class="dots"><i></i><i></i><i></i></span>';
+  try{
+    const sample=await claude.use('sample');if(!sample)throw {code:'none'};
+    const p=CONVINCE_SYS+'\n\nThe request: '+want+'\nWho they are asking: '+$('#who').value+'\nPossible worries: '+($('#worry').value.trim()||'none given');
+    const r=await sample(p,{cache:false,onText:({text})=>{out.textContent=text}});
+    out.textContent=r.text;
+  }catch(e){out.textContent=e&&e.code==='not_granted'?'Access was declined. Reload the page and allow it when asked.':'Couldn’t build your case. Check your connection and try again.'}
+  btn.disabled=false;
+};
+
+fresh();
+</script>
+</body>
+</html>
